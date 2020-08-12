@@ -1,4 +1,4 @@
-const calculateBmi = (height: number, weight: number) => {
+ export const calculateBmi = (height: number, weight: number) => {
     if (!isNaN(Number(height)) && !isNaN(Number(weight))) {
         const result = ((weight / (height * height)) * 10000)
         let bmi;
