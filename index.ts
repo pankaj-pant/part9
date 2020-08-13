@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import express from 'express';
 import {calculateBmi} from './bmiCalculator';
 import {calculator} from './calculator';
 import type {Operation} from './calculator';
+import {calculateExercises} from './exerciseCalculator';
 const app = express();
+app.use(express.json());
 const port = 3000;
 
 app.get('/hello', (_req, res) => {
@@ -32,6 +35,23 @@ app.get('/calculate', (req, res) => {
     const op: Operation = req.query.op as Operation;
     const result = calculator(Number(num1), Number(num2), op);
     res.send({result: result});
+});
+
+app.post('/exercises', (req, res) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const {target, daily_exercises} = req.body;
+  if (daily_exercises === "" || daily_exercises.length === 0 || Number(target) < 1) {
+    res.send({
+      error: 'parameters missing'
+    });
+  } else if (!Array.isArray(daily_exercises)) {
+    res.send({
+      error: 'malformatted parameters'
+    });
+  } else {
+    const result = calculateExercises(Number(target), daily_exercises);
+    res.send(result);
+  }
 });
 
 app.listen(port, () => {

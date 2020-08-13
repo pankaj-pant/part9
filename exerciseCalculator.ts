@@ -8,9 +8,13 @@ interface ResultObject {
     average: number,
 }
 
-const calculateExercises = (target: number, hours: number[]): ResultObject => {
+interface ErrorObject {
+    error: string
+}
 
-    if (hours.every(h => !isNaN(Number(h))) && !isNaN(Number(target))) {
+export const calculateExercises = (target: number, hours: number[]): ResultObject | ErrorObject => {
+
+     if (hours.every(h => !isNaN(Number(h))) && !isNaN(Number(target))) {
         const periodLength = hours.length;
         const trainingDays = hours.filter(a => a > 0);
         const sum = hours.reduce((a, b) => a + b, 0);
@@ -38,16 +42,19 @@ const calculateExercises = (target: number, hours: number[]): ResultObject => {
             success: success,
             rating: rating,
             ratingDescription: ratingDescription,
-            target: target,
+            target: Number(target),
             average: average
         };
     } else {
-        throw new Error('Provided values were not numbers!');
+        //throw new Error('Provided values were not numbers!');
+        return {
+            error: "malformatted parameters"
+        };
     }
 
 };
 
-const target = Number(process.argv[2]);
+/* const target = Number(process.argv[2]);
 const arr: Array<number> = process.argv.slice(3).map(Number);
 
 
@@ -56,4 +63,4 @@ try {
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     console.log('Error, something bad happened, message: ', e.message);
-  }
+  } */
